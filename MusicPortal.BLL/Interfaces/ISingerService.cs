@@ -10,6 +10,6 @@ namespace MusicPortal.BLL.Interfaces
         Task<IEnumerable<SingerDTO>> GetAllArtists();
         Task<int> GetArtistId(MusicDTO song);
         Task DeleteArtist(int id);
-        Task UpdateArtist(int id, string n, string p);
+        Task UpdateArtist(int id, string n);
     }
 }

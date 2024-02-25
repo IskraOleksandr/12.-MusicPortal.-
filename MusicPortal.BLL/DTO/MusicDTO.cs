@@ -18,5 +18,6 @@ namespace MusicPortal.BLL.DTO
         public DateTime VideoDate { get; set; }
         public string? Album { get; set; }
         public string Video_URL { get; set; }
+        public string Year { get; set; }
     }
 }

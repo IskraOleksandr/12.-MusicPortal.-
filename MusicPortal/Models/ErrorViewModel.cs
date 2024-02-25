@@ -1,4 +1,4 @@
-namespace MusicPortal.Models
+namespace MusikPortal.Models
 {
     public class ErrorViewModel
     {

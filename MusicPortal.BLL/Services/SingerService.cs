@@ -55,9 +55,9 @@ namespace MusicPortal.BLL.Services
             await Database.Artists.Delete(id);
             await Database.Save();
         }
-        public async Task UpdateArtist(int id,string n,string p)
+        public async Task UpdateArtist(int id,string n)
         {        
-           await Database.Artists.Update(id, n, p);
+           await Database.Artists.Update(id, n);
             await Database.Save();
         }
 
