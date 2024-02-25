@@ -12,10 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
-    <Folder Include="Infrastructure\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\MusicPortal.DAL\MusicPortal.DAL.csproj" />
   </ItemGroup>
 
 </Project>

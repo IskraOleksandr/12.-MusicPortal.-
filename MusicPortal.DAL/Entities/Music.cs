@@ -27,11 +27,5 @@ namespace MusicPortal.DAL.Entities
 
         public virtual Singer Singer { get; set; }
 
-      
-        public int MusicStyleId { get; set; }
-
-        public int UserId { get; set; }
-
-        public int SingerId { get; set; }
     }
 }
