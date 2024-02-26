@@ -1,0 +1,187 @@
+﻿@model IEnumerable<MusicPortal.Models.AddSinger>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br>
+<div>
+    <div class="dv1">
+        <h1 class="h1_n">Исполнители</h1>
+        <div class="div_l1 div_l2n1">
+            <div class="div_l2 div_l2n wh">
+                <hr style="border:none;width:465px" />
+                <a class="a_bt1 " asp-action="Create" id="AddSingerDialog" data_dialog_title="Create model">Добавить исполнителя</a>
+
+                <div class="div_l3n wh">
+                    <div class="div_l4 wh">
+                        @if (ViewBag.Singers.Count != 0)
+                        {
+                            <table class="table1">
+                                <thead>
+                                    <tr>
+                                        <th class="th1"> @Html.DisplayNameFor(model => model.SingerName) </th>
+                                        <th class="th1"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.Singers)
+                                    {
+                                        <tr class="tr1">
+                                            <td class="td1"> @item.SingerName </td>
+                                            <td class="td1">
+                                                <a class="a_bt2 EditSingerDialog" asp-action="Edit" asp-route-id="@item.Id" data_dialog_title="Edit model">Редактировать</a>
+                                                <a class="a_bt2 DeleteSingerDialog" asp-action="Delete" asp-route-id="@item.Id" data_dialog_title="Delete model">Удалить</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <h3 style="width:465px;text-align:center">Исполнителей нет</h3>
+                        }
+                    </div>
+                </div>
+                <br /> <br />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#AddMusicDialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div id='dialogContent' style='width: 10px'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: "Добавление песни",
+                        close: function () { $(this).remove() },
+                        dialogClass: 'myTitleClass',
+                        width: "420px",
+                        resizable: false,
+                        modal: true,
+                        buttons: [{
+                            class: "input_subm inp_sub2",
+                            text: "Сохранить",
+                            click: function () {
+                                var files = $("#Video_URL")[0].files;
+                                var formData = new FormData();
+                                formData.append("Video_URL", files[0]);
+
+                                formData.append("Video_Name", $("#Video_Name").val());
+                                formData.append("Album", $("#Album").val());
+                                formData.append("Year", $("#Year").val());
+                                formData.append("VideoDate", $("#VideoDate").val());
+                                formData.append("MusicStyleId", $("#MusicStyleId").val());
+                                formData.append("SingerId", $("#SingerId").val());
+                                formData.append("UserId", $("#UserId").val());
+                                $.ajax({
+                                    url: "@Url.Action("Create", "Music")",
+                                    type: "POST",
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function (result) {
+                                        $("#dialogContent").html(result);
+                                    }
+                                });
+                            }
+                        }]
+                    });
+            });
+            $(".DeleteSingerDialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .dialog({
+                        title: "Удаление исполнителя",
+                        close: function () { $(this).remove() },
+                        dialogClass: 'myTitleClass',
+                        width: "420px",
+                        resizable: false,
+                        modal: true
+                    })
+                    .load(this.href);
+            });
+
+
+            $("#AddSingerDialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div id='dialogContent'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: "Добавление исполнителя",
+                        close: function () { $(this).remove() },
+                        dialogClass: 'myTitleClass',
+                        width: "420px",
+                        resizable: false,
+                        modal: true,
+                        buttons: [{
+                            class: "input_subm  inp_sub2",
+                            text: "Добавить",
+                            click: function () {
+                                $.ajax({
+                                    url: "@Url.Action("Create", "Singer")",
+                                    type: "POST",
+                                    data: $('form').serialize(),
+                                    datatype: "json",
+                                    success: function (result) {
+                                        $("#dialogContent").html(result);
+                                    }
+                                });
+                            }
+                        }]
+                    });
+            });
+
+            $(".EditSingerDialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div id='dialogContent'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: "Редактирование исполнителя",
+                        close: function () { $(this).remove() },
+                        dialogClass: 'myTitleClass1',
+                        width: "465px",
+                        resizable: false,
+                        modal: true,
+                        buttons: [{
+                            class: "input_subm  inp_sub2",
+                            text: "Сохранить",
+                            click: function () {
+                                $.ajax({
+                                    url: "@Url.Action("Edit", "Singer")",
+                                    type: "POST",
+                                    data: $('form').serialize(),
+                                    datatype: "json",
+                                    success: function (result) {
+                                        $("#dialogContent").html(result);
+                                    }
+                                });
+                            }
+                        }]
+                    });
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

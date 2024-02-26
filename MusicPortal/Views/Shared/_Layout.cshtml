@@ -1,49 +1,51 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MusicPortal</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - Музыкальный портал Music portal</title>
+    <link rel="stylesheet" href="~/css/base/jquery-ui.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MusicPortal.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Style.css" asp-append-version="true" />
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MusicPortal</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <div class="my_nav">
+            <a asp-controller="Music" asp-action="Index">Музыкальный портал</a>
+            @if (Context.Session.GetString("Login") == null)
+            {
+                <a data_dialog_title="Register model" id="RegisterDialog" asp-controller="User" asp-action="Register">Регистрация</a>
+                <a style="float: right;" asp-controller="User" asp-action="Login" id="LoginDialog" data_dialog_title="Login model">Вход</a>
+            }
+            else
+            {
+                if (Context.Session.GetInt32("Level") > 0)
+                {
+                    <a asp-controller="Music" asp-action="Create" id="AddMusicDialog" data_dialog_title="Create model">Добавить клип</a>
+
+                    if (Context.Session.GetInt32("Level") == 2)
+                    {
+                        <a asp-controller="MusicStyle" asp-action="Index">Стили</a>
+                        <a asp-controller="User" asp-action="Index">Все участники</a>
+                        <a asp-controller="Singer" asp-action="Index">Исполнители</a>
+                    }
+                }
+                <a style="float: right;" asp-controller="Music" asp-action="Logout">Выход</a>
+                <a class="active" style="float: right;">Здравствуйте, @Context.Session.GetString("Login") </a>
+            }
+        </div>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div class="container body-content">
+        @RenderBody()
+
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - MusicPortal - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery-ui-1.12.1.js"> </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

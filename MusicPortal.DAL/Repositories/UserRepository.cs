@@ -18,6 +18,10 @@ namespace MusicPortal.DAL.Repositories
         {
             this.db = context;
         }
+        public async Task<IEnumerable<User>> GetAll()
+        {
+            return await db.Users.ToListAsync();
+        }
         public async Task<User> GetUser(string name)
         {
             return await db.Users.FirstOrDefaultAsync(m => m.FirstName == name);
@@ -41,6 +45,24 @@ namespace MusicPortal.DAL.Repositories
             {
                 f.Level = l;
                 db.Users.Update(f);
+
+            }
+        }
+        public async Task Update(User u)
+        {
+            var f = await db.Users.FindAsync(u.Id);
+            if (f != null)
+            {
+                db.Users.Update(f);
+
+            }
+        }
+        public async Task Delete(int id)
+        {
+            var c = await db.Users.FindAsync(id);
+            if (c != null)
+            {
+                db.Users.Remove(c);
 
             }
         }

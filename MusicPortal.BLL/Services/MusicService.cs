@@ -33,23 +33,25 @@ namespace MusicPortal.BLL.Services
                 Video_URL = s.Video_URL,
                 VideoDate = s.VideoDate,
                 Album = s.Album,
-                singer = s.Singer.SingerName,
+                Singer = s.Singer.SingerName,
                 singerId = s.Singer.Id,
-                music_style = s.MusicStyle.StyleName,
-                music_styleId = s.MusicStyle.Id
+                music_style = s.music_style.StyleName,
+                music_styleId = s.music_style.Id,
+                userId = s.UserId,
+                user_name = s.User.Login,
             };
         }
         public async Task<IEnumerable<MusicDTO>> GetAllSongs()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Music, MusicDTO>()
-            .ForMember("artist", opt => opt.MapFrom(c => c.Singer.SingerName)).ForMember("style", opt => opt.MapFrom(c => c.MusicStyle.StyleName)));
+            .ForMember("Singer", opt => opt.MapFrom(c => c.Singer.SingerName)).ForMember("music_style", opt => opt.MapFrom(c => c.music_style.StyleName)));
             var mapper = new Mapper(config);
             return mapper.Map<IEnumerable<Music>, IEnumerable<MusicDTO>>(await Database.Songs.GetList());
         }
         public async Task<IEnumerable<MusicDTO>> FindSongs( string str)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Music, MusicDTO>()
-             .ForMember("artist", opt => opt.MapFrom(c => c.Singer.SingerName)).ForMember("style", opt => opt.MapFrom(c => c.MusicStyle.StyleName)));
+             .ForMember("Singer", opt => opt.MapFrom(c => c.Singer.SingerName)).ForMember("music_style", opt => opt.MapFrom(c => c.music_style.StyleName)));
             var mapper = new Mapper(config);
             return mapper.Map<IEnumerable<Music>, IEnumerable<MusicDTO>>(await Database.Songs.FindSongs(str));
         }
@@ -61,6 +63,7 @@ namespace MusicPortal.BLL.Services
         }
         public async Task<Music> SongDTOToSong(MusicDTO songDto)
         {
+            User us = await Database.Users.Get(songDto.userId.Value);
             Singer a = await Database.Artists.Get(songDto.singerId.Value);
             MusicStyle st = await Database.Styles.Get(songDto.music_styleId.Value);
             var s = new Music
@@ -71,7 +74,11 @@ namespace MusicPortal.BLL.Services
                 VideoDate = songDto.VideoDate,
                 Album = songDto.Album,
                 Singer = a,
-                MusicStyle = st
+                SingerId = a.Id,
+                music_style = st,
+                MusicStyleId = st.Id,
+                User = us,
+                UserId = us.Id
             };
             return s;
         }

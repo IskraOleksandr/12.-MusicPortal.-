@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MusikPortal.Models;
+using MusicPortal.Models;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using Azure;
 using MusicPortal.DAL.Entities;
 using MusicPortal.Filters;
 
-namespace MusikPortal.Controllers
+namespace MusicPortal.Controllers
 {
     [Culture]
     public class LoginController : Controller

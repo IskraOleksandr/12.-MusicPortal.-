@@ -1,0 +1,19 @@
+﻿@model MusicPortal.Models.AddMusicStyle
+
+<div style="margin-left:10px">
+    <h3 style="margin-top:-15px">Вы действительно желаете удалить стиль?</h3>
+    <dl class="row">
+        <dt style="font-weight:bold">
+            @Html.DisplayNameFor(model => model.StyleName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StyleName)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="input_subm_del inp_sub3" />
+
+    </form>
+</div>

@@ -54,5 +54,15 @@ namespace MusicPortal.DAL.Repositories
             Singer a = await db.Singers.FirstOrDefaultAsync(m => m == s.Singer);
             return a.Id;
         }
+        public async Task Update(Singer u)
+        {
+            var f = await db.Singers.FindAsync(u.Id);
+            if (f != null)
+            {
+                db.Singers.Update(f);
+
+            }
+        }
+        
     }
 }

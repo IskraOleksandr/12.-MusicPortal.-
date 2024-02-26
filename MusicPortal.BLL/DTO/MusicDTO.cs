@@ -13,11 +13,13 @@ namespace MusicPortal.BLL.DTO
         public string Video_Name { get; set; }
         public string? music_style { get; set; }
         public int? music_styleId { get; set; }
-        public string? singer { get; set; }
+        public string? Singer { get; set; }
         public int? singerId { get; set; }
         public DateTime VideoDate { get; set; }
         public string? Album { get; set; }
         public string Video_URL { get; set; }
         public string Year { get; set; }
+        public string? user_name { get; set; }
+        public int? userId { get; set; }
     }
 }

@@ -1,0 +1,184 @@
+﻿@model IEnumerable<MusicPortal.BLL.DTO.UserDTO>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br>
+<div>
+    <div class="dv1 wh">
+        <h1 class="h1_n">Список пользователей</h1>
+        <div class="div_l1 div_l2n1 ">
+            <div class="div_l2 div_l2n wh">
+                <br />
+                <div class="div_l3n wh">
+                    <div class="div_l4 wh">
+                        <table class="table1">
+                            <thead>
+                                <tr>
+
+                                    <th class="th2">
+                                        @Html.DisplayNameFor(model => model.Id)
+                                    </th>
+                                    <th class="th2">
+                                        @Html.DisplayNameFor(model => model.First_Name)
+                                    </th>
+                                    <th class="th2">
+                                        @Html.DisplayNameFor(model => model.Last_Name)
+                                    </th>
+                                    <th class="th2">
+                                        @Html.DisplayNameFor(model => model.Login)
+                                    </th>
+                                    <th class="th2">
+                                        @Html.DisplayNameFor(model => model.email)
+                                    </th>
+                                    <th class="th2">
+                                        @Html.DisplayNameFor(model => model.Level)
+                                    </th>
+                                    <th class="th2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="tr1">
+
+                                        <td class="td2">
+                                            @Html.DisplayFor(modelItem => item.Id)
+                                        </td>
+
+                                        <td class="td2">
+                                            @Html.DisplayFor(modelItem => item.First_Name)
+                                        </td>
+                                        <td class="td2">
+                                            @Html.DisplayFor(modelItem => item.Last_Name)
+                                        </td>
+                                        <td class="td2">
+                                            @Html.DisplayFor(modelItem => item.Login)
+                                        </td>
+                                        <td class="td2">
+                                            @Html.DisplayFor(modelItem => item.email)
+                                        </td>
+                                        <td class="td2">
+                                            @Html.DisplayFor(modelItem => item.Level)
+                                        </td>
+                                        <td class="td2">
+                                            <a class="a_bt2 EditUserDialog" asp-action="Edit" asp-route-id="@item.Id" data_dialog_title="Edit model">Редактировать</a>
+                                            <a class="a_bt2 DeleteUserDialog" asp-action="Delete" asp-route-id="@item.Id" data_dialog_title="Delete model">Удалить</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br /> <br />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#AddMusicDialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div id='dialogContent' style='width: 10px'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: "Добавление песни",
+                        close: function () { $(this).remove() },
+                        dialogClass: 'myTitleClass',
+                        width: "420px",
+                        resizable: false,
+                        modal: true,
+                        buttons: [{
+                            class: "input_subm inp_sub2",
+                            text: "Сохранить",
+                            click: function () {
+                                var files = $("#Video_URL")[0].files;
+                                var formData = new FormData();
+                                formData.append("Video_URL", files[0]);
+
+                                formData.append("Video_Name", $("#Video_Name").val());
+                                formData.append("Album", $("#Album").val());
+                                formData.append("Year", $("#Year").val());
+                                formData.append("VideoDate", $("#VideoDate").val());
+                                formData.append("MusicStyleId", $("#MusicStyleId").val());
+                                formData.append("SingerId", $("#SingerId").val());
+                                formData.append("UserId", $("#UserId").val());
+                                $.ajax({
+                                    url: "@Url.Action("Create", "Music")",
+                                    type: "POST",
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function (result) {
+                                        $("#dialogContent").html(result);
+                                    }
+                                });
+                            }
+                        }]
+                    });
+            });
+
+            $(".DeleteUserDialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .dialog({
+                        title: "Удаление пользователя",
+                        close: function () { $(this).remove() },
+                        dialogClass: 'myTitleClass',
+                        width: "420px",
+                        resizable: false,
+                        modal: true
+                    })
+                    .load(this.href);
+            });
+
+
+            $(".EditUserDialog").on("click", function (e) {
+                e.preventDefault();
+
+                $("<div id='dialogContent'></div>")
+                    .addClass("dialog")
+                    .appendTo("body")
+                    .load(this.href)
+                    .dialog({
+                        title: "Редактирование пользователя",
+                        close: function () { $(this).remove() },
+                        dialogClass: 'myTitleClass1v',
+                        width: "485px",
+                        resizable: false,
+                        modal: true,
+                        buttons: [{
+                            class: "input_subm inp_sub",
+                            text: "Сохранить",
+                            click: function () {
+                                $.ajax({
+                                    url: "@Url.Action("Edit", "User")",
+                                    type: "POST",
+                                    data: $('form').serialize(),
+                                    datatype: "json",
+                                    success: function (result) {
+                                        $("#dialogContent").html(result);
+                                    }
+                                });
+                            }
+                        }]
+                    });
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

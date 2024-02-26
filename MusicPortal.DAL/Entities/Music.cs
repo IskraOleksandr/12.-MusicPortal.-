@@ -21,11 +21,15 @@ namespace MusicPortal.DAL.Entities
 
         public DateTime VideoDate { get; set; }
 
-        public virtual MusicStyle MusicStyle { get; set; }
+        public virtual MusicStyle music_style { get; set; }
 
         public virtual User User { get; set; }
 
         public virtual Singer Singer { get; set; }
+        public int MusicStyleId { get; set; }
 
+        public int UserId { get; set; }
+
+        public int SingerId { get; set; }
     }
 }

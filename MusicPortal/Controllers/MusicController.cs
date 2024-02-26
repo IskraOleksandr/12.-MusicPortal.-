@@ -1,105 +1,219 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MusikPortal.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using MusicPortal.BLL.Interfaces;
 using MusicPortal.BLL.DTO;
-using MusicPortal.BLL.Services;
-using MusicPortal.Filters;
+using MusicPortal.BLL.Interfaces;
+using System.Diagnostics;
+using MusicPortal.Models;
 
-
-namespace MusikPortal.Controllers
+namespace MusicPortal.Controllers
 {
-    [Culture]
     public class MusicController : Controller
     {
-        IWebHostEnvironment _appEnvironment;
-        private readonly IMusicService songService;
-        private readonly ISingerService artistService;
+        private readonly IWebHostEnvironment _appEnvironment;
+        private readonly IMusicService musicService;
+        private readonly ISingerService singerService;
         private readonly IMusicStyleService styleService;
-        public MusicController(IMusicService s, ISingerService a, IMusicStyleService st, IWebHostEnvironment appEnvironment)
+        private readonly IUserService userService;
+
+        public MusicController(IMusicService s,ISingerService a, IMusicStyleService ms, IWebHostEnvironment webHostEnvironment, IUserService userService)
         {
-            songService = s;
-            artistService = a;
-            styleService = st;
-            _appEnvironment = appEnvironment;
+            musicService = s;
+            singerService = a;
+            styleService = ms;
+            _appEnvironment = webHostEnvironment;
+            this.userService = userService;
+
         }
-        [HttpGet]
+
+        public async Task<IActionResult> Index()
+        {
+            IEnumerable<MusicDTO> singers = await Task.Run(() => musicService.GetAllSongs());
+            ViewBag.Musics = singers;//
+            return View("Index");
+        }
+
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Music");
+        }
+
         public async Task<IActionResult> Create()
         {
-            await putStylesArtists();
-            //return View("AddSong");
-            return PartialView("AddSong");
+            var styles = await styleService.GetAllStyles();
+            var singers = await singerService.GetAllArtists();
+
+            ViewBag.Style_List = new SelectList(styles, "Id", "StyleName");
+            ViewBag.Singer_List = new SelectList(singers, "Id", "SingerName");
+            return PartialView("Create");
         }
+
         [HttpPost]
-       // [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( AddSong song, IFormFile file)
-        {            
-            if (file == null)
-                ModelState.AddModelError("", "put the file");
-            DateTime today = DateTime.Today;
-            int currentYear = today.Year;
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Video_Name,Album,Year,Video_URL,VideoDate,MusicStyleId,SingerId,UserId")] AddMusic music, IFormFile Video_URL)
+        {
+
+            var user_login = HttpContext.Session.GetString("Login");
+
+            if (HttpContext.Session.GetString("Login") == null)
+                return PartialView("~/Views/User/Login.cshtml");
+
+            MusicDTO musicDTO = new();
+            var us = await userService.GetUser(user_login);
+            musicDTO.userId = us.Id;
+
+           // var style = await styleService.GetStyle(music.MusicStyleId);
+            musicDTO.music_styleId = music.MusicStyleId;
+
+            //var singer = await singerService.GetArtist(music.SingerId);
+            musicDTO.singerId = music.SingerId;
+
+            musicDTO.userId = us.Id;
+            musicDTO.VideoDate = DateTime.Now;
             try
             {
-                if (Convert.ToInt32(song.Year) < 0 || Convert.ToInt32(song.Year) > currentYear)
-                    ModelState.AddModelError("", "uncorrectly year");
-            }
-            catch { ModelState.AddModelError("", "uncorrectly year"); }
-            if (file != null)
-            {
-                string str= file.FileName.Replace(" ", "_");
-                string str1 = str.Replace("-", "_");
-                // Путь к папке Files
-                string path = "/MusicFiles/" + str1; // имя файла
+                if (Video_URL != null)
+                {
+                    string file_path = "/Music/" + Video_URL.FileName;
 
-                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream); // копируем файл в поток
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + file_path, FileMode.Create))
+                    {
+                        await Video_URL.CopyToAsync(fileStream); // копируем файл в поток
+                    }
+                    musicDTO.Video_URL = "~" + file_path;
+                    await musicService.AddSong(musicDTO);
+                    
+                    return PartialView("~/Views/Music/Success.cshtml");
                 }
-                MusicDTO s = new();
-                MusicStyleDTO sStyle = await styleService.GetStyle(song.MusicStyleId);
-                SingerDTO aArtist = await artistService.GetArtist(song.SingerId);
-                s.Video_Name = song.Video_Name;
-                s.music_style =sStyle.StyleName;
-                s.music_styleId = sStyle.Id;
-                s.singer = aArtist.SingerName;
-                s.singerId = aArtist.Id;
-                s.VideoDate = song.VideoDate;
-                s.Year = song.Year;
-                s.Album=song.Album; 
-                s.Video_URL = path;
-                if (ModelState.IsValid)
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await MusicExists(music.Id))
                 {
-                    try
-                    {
-                        await songService.AddSong(s);                       
-                        await songService.AddSongToArtist(song.SingerId, s);
-                         return PartialView("Success");
-                       // return Json("success");
-                    }
-                    catch
-                    {
-                        await putStylesArtists();
-                        return PartialView("AddSong", song);
-                    }
+                    return NotFound();
                 }
                 else
                 {
-                    await putStylesArtists();
-                    return PartialView("AddSong", song);
+                    throw;
                 }
             }
-            await putStylesArtists();
-            return PartialView("AddSong", song);
+            return PartialView("Create");
         }
-        public async Task putStylesArtists()
+
+        public async Task<IActionResult> Edit(int? id)
         {
-            IEnumerable<MusicStyleDTO> s = await styleService.GetAllStyles();
-            IEnumerable<SingerDTO> a = await artistService.GetAllArtists();
-            ViewData["StyleId"] = new SelectList(s, "Id", "Name");
-            ViewData["ArtistId"] = new SelectList(a, "Id", "Name");
+            if (id == null || await musicService.GetAllSongs() == null)
+            {
+                return NotFound();
+            }
+
+            var music = await musicService.GetSong((int)id);
+            if (music == null)
+            {
+                return NotFound();
+            }
+
+            var styles = await styleService.GetAllStyles();
+            var singers = await singerService.GetAllArtists();
+
+            ViewBag.Style_List = new SelectList(styles, "Id", "StyleName");
+            ViewBag.Singer_List = new SelectList(singers, "Id", "SingerName");
+            return PartialView("Edit", music);
         }
-       
+
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Video_Name,Album,Year,Video_URL,VideoDate,MusicStyleId,SingerId,UserId")] AddMusic music, IFormFile Video_URL)
+        {
+            if (id != music.Id)
+                return NotFound();
+
+            var user_login = HttpContext.Session.GetString("Login");
+
+            if (HttpContext.Session.GetString("Login") == null)
+                return PartialView("~/Views/User/Login.cshtml");
+
+            MusicDTO musicDTO = new MusicDTO();
+            var us = await userService.GetUser(user_login);
+            musicDTO.userId = us.Id;
+
+           // var style = await styleService.GetStyle(music.MusicStyleId);
+            musicDTO.music_styleId = music.MusicStyleId;
+
+            //var singer = await singerService.GetArtist(music.SingerId);
+            musicDTO.singerId = music.SingerId;
+
+            musicDTO.userId = us.Id;
+            musicDTO.VideoDate = DateTime.Now;
+            try
+            {
+                if (Video_URL != null)
+                {
+                    string file_path = "/Music/" + Video_URL.FileName;
+
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + file_path, FileMode.Create))
+                    {
+                        await Video_URL.CopyToAsync(fileStream); // копируем файл в поток
+                    }
+                    musicDTO.Video_URL = "~" + file_path;
+
+                    musicService.UpdateSong(musicDTO);
+                    
+                    return PartialView("~/Views/Music/Success.cshtml");
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await MusicExists(music.Id))
+                {
+                    return NotFound();
+                }
+                else throw;
+            }
+            return PartialView("Edit");
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || await musicService.GetAllSongs() == null)
+            {
+                return NotFound();
+            }
+
+            var music = await musicService.GetSong((int)id);
+            if (music == null)
+            {
+                return NotFound();
+            }
+
+            return PartialView(music);
+        }
+
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (await musicService.GetAllSongs() == null)
+            {
+                return Problem("Entity set 'Music_PortalContext.Musics'  is null.");
+            }
+
+            var music = await musicService.GetSong(id);
+            if (music != null)
+            {
+                await musicService.DeleteSong(id);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<bool> MusicExists(int id)
+        {
+            IEnumerable<MusicDTO> list = await musicService.GetAllSongs();
+            return (list?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
     }
 }

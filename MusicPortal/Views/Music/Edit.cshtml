@@ -1,0 +1,65 @@
+﻿@model MusicPortal.Models.AddMusic
+ 
+<div class="dv_w" style="margin-left:10px">
+    <div class="dv1v dv_w">
+        <div class="dv_w">
+            <form asp-action="Edit" asp-controller="Music" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" id="Id"/>
+                <input type="hidden" asp-for="UserId" id="UserId" />
+                <br />
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="Video_Name" class="label3"></label>
+                        <input asp-for="Video_Name" class="input1" type="text" id="Video_Name" />
+                    </div>
+                    <span asp-validation-for="Video_Name" class="span_error dv_w"></span>
+                </div>
+
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="Album" class="label3"></label>
+                        <input asp-for="Album" class="input1" type="text" id="Album" />
+                    </div>
+                    <span asp-validation-for="Album" class="span_error dv_w"></span>
+                </div>
+
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="Year" class="label3"></label>
+                        <input asp-for="Year" class="input1" type="text" id="Year" />
+                    </div>
+                    <span asp-validation-for="Year" class="span_error dv_w"></span>
+                </div>
+
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="Video_URL" class="label3"></label>
+                        <input asp-for="Video_URL" class="input_file div_com div_i" style="float:left" type="file" name="Video_URL" id="Video_URL" />
+                    </div>
+                    <span asp-validation-for="Video_URL" class="span_error dv_w"></span>
+                </div>
+
+                <div class="div_l3n">
+                    <div class="div_l4">
+                        <label asp-for="MusicStyleId" class="label_l1">Стиль музыки:</label>
+                        <select class="input1 input_range" asp-for="MusicStyleId" asp-items="@ViewBag.Style_List" id="MusicStyleId">
+                            <option value="">Виберите стиль музыки</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="MusicStyleId" class="span_error"></span>
+                </div>
+
+                <div class="div_l3n">
+                    <div class="div_l4">
+                        <label asp-for="SingerId" class="label_l1">Исполнитель:</label>
+                        <select class="input1 input_range" asp-for="SingerId" asp-items="@ViewBag.Singer_List" id="SingerId">
+                            <option value="">Виберите исполнителя</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="SingerId" class="span_error"></span>
+                </div> 
+            </form>
+        </div> 
+    </div>
+</div>

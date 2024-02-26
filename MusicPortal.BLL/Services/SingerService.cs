@@ -60,6 +60,22 @@ namespace MusicPortal.BLL.Services
            await Database.Artists.Update(id, n);
             await Database.Save();
         }
+        public async Task UpdateSinger(SingerDTO a)
+        {
+            Singer u = await Database.Artists.Get(a.Id);
+            u.Id= a.Id;
+            u.SingerName = a.SingerName;
+            //u.Musics = a.;
+            //u.Level = a.Level.Value;
+            //u.Email = a.email;
+            //u.Login = a.Login;
 
+            //if (u.Password != a.Password)
+            //{
+
+            //}
+            await Database.Artists.Update(u);
+            await Database.Save();
+        }
     }
 }

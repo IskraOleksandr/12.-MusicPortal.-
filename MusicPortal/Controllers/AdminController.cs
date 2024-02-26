@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MusikPortal.Models;
+using MusicPortal.Models;
 using MusicPortal.BLL.DTO;
 using MusicPortal.BLL.Interfaces;
 using MusicPortal.BLL.Infrastructure;
@@ -10,7 +10,7 @@ using MusicPortal.BLL.Services;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MusicPortal.Filters;
 
-namespace MusikPortal.Controllers
+namespace MusicPortal.Controllers
 {
     [Culture]
     public class AdminController : Controller
@@ -306,7 +306,7 @@ namespace MusikPortal.Controllers
             try
             {
                 MusicDTO s = await songService.GetSong(id);
-                AddSong s1 = new();
+                AddMusic s1 = new();
                 s1.SongId = id;
                 s1.Video_Name = s.Video_Name;
                 s1.VideoDate = s.VideoDate;
@@ -327,7 +327,7 @@ namespace MusikPortal.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> EditSong(AddSong s, IFormFile? p)
+        public async Task<IActionResult> EditSong(AddMusic s, IFormFile? p)
         {
             try
             {
@@ -361,7 +361,7 @@ namespace MusikPortal.Controllers
                         song.Year = s.Year;
                         song.Album = s.Album;
                         SingerDTO a = await artistService.GetArtist(s.SingerId);
-                        song.singer = a.SingerName;
+                        song.Singer = a.SingerName;
                         song.singerId = a.Id;
 
                         MusicStyleDTO st = await styleService.GetStyle(s.MusicStyleId);

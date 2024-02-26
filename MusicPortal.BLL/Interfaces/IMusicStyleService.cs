@@ -11,5 +11,6 @@ namespace MusicPortal.BLL.Interfaces
         Task<int> GetStyleId(MusicDTO song);
         Task DeleteStyle(int id);
         Task UpdateStyle(int id, string n);
+        Task UpdateMusicStyle(MusicStyleDTO a);
     }
 }

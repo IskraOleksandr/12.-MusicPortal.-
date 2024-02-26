@@ -1,0 +1,20 @@
+﻿@model MusicPortal.Models.AddSinger
+
+<div class="dv_w " style="height:125px;margin-left:10px">
+    <div class="dv1 dv_w " style=" margin-left:0px;height:125px">
+        <div class="dv_w">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="SingerName" class="label3"></label>
+                        <input asp-for="SingerName" class="input1" type="text" />
+                    </div>
+                    <span asp-validation-for="SingerName" class="span_error dv_w"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

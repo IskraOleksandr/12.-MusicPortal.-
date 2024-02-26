@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace MusikPortal.Models
+namespace MusicPortal.Models
 {
     public class RegisterModel
     {

@@ -1,0 +1,43 @@
+﻿@model MusicPortal.Models.AddUser
+ 
+<div style="margin-left:10px">
+    <h3 style="margin-top:-15px">Вы действительно желаете удалить пользователя?</h3>
+    <dl class="row">
+        <dt >
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd >
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt >
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt >
+            @Html.DisplayNameFor(model => model.Login)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Login)
+        </dd>
+        <dt >
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt >
+            @Html.DisplayNameFor(model => model.Level)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Level)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="input_subm_del inp_sub3" />
+
+    </form>
+</div>

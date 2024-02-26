@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MusikPortal.Models;
+using MusicPortal.Models;
 using MusicPortal.BLL.DTO;
 using MusicPortal.BLL.Interfaces;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using AutoMapper;
 using Newtonsoft.Json;
 using MusicPortal.Filters;
 
-namespace MusikPortal.Controllers
+namespace MusicPortal.Controllers
 {
     [Culture]
     public class HomeController : Controller

@@ -57,5 +57,22 @@ namespace MusicPortal.BLL.Services
             await Database.Styles.Update(id,n);
             await Database.Save();
         }
+        public async Task UpdateMusicStyle(MusicStyleDTO a)
+        {
+            MusicStyle u = await Database.Styles.Get(a.Id);
+            u.Id = a.Id;
+            u.StyleName = a.StyleName;
+            //u.Musics = a.;
+            //u.Level = a.Level.Value;
+            //u.Email = a.email;
+            //u.Login = a.Login;
+
+            //if (u.Password != a.Password)
+            //{
+
+            //}
+            await Database.Styles.Update(u);
+            await Database.Save();
+        }
     }
 }

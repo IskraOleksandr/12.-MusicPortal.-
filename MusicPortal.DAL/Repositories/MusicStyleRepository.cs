@@ -24,7 +24,7 @@ namespace MusicPortal.DAL.Repositories
         }
         public async Task<int> GetId(Music s)
         {
-            MusicStyle a = s.MusicStyle;
+            MusicStyle a = s.music_style;
             return a.Id;
         }
         public async Task<List<MusicStyle>> GetList()
@@ -50,6 +50,15 @@ namespace MusicPortal.DAL.Repositories
             if (f != null)
             {
                 f.StyleName = s;
+                db.MusicStyles.Update(f);
+
+            }
+        }
+        public async Task Update(MusicStyle u)
+        {
+            var f = await db.MusicStyles.FindAsync(u.Id);
+            if (f != null)
+            {
                 db.MusicStyles.Update(f);
 
             }

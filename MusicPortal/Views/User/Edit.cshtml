@@ -1,0 +1,56 @@
+﻿@model MusicPortal.Models.AddUser
+ 
+<div class="dv_w" style="margin-left:35px">
+    <div class="dv1v dv_w">
+        <div class="dv_w">
+            <form asp-action="Edit" asp-controller="User">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                @* <input type="hidden" asp-for="Password" />
+                <input type="hidden" asp-for="Salt" /> *@
+                <br />
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="FirstName" class="label3"></label>
+                        <input asp-for="FirstName" class="input1" type="text" />
+                    </div>
+                    <span asp-validation-for="FirstName" class="span_error dv_w"></span>
+                </div>
+
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="LastName" class="label3"></label>
+                        <input asp-for="LastName" class="input1" type="text" />
+                    </div>
+                    <span asp-validation-for="LastName" class="span_error dv_w"></span>
+                </div>
+
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="Login" class="label3"></label>
+                        <input asp-for="Login" class="input1" type="text" />
+                    </div>
+                    <span asp-validation-for="Login" class="span_error dv_w"></span>
+                </div>
+
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="Email" class="label3"></label>
+                        <input asp-for="Email" class="input1" type="text" />
+                    </div>
+                    <span asp-validation-for="Email" class="span_error dv_w"></span>
+                </div>
+
+                <div class="div_l3n dv_w">
+                    <div class="div_l4 dv_w">
+                        <label asp-for="Level" class="label3"></label>
+                        <input asp-for="Level" class="input1 " type="number" min="0" max="2" placeholder="0" />
+                    </div>
+                    <span asp-validation-for="Level" class="span_error dv_w"></span>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>

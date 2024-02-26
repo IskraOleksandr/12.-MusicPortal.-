@@ -10,5 +10,6 @@ namespace MusicPortal.DAL.Interfaces
     public interface IMusicStyleRepository : ISetGetRepository<MusicStyle>, IRepository<MusicStyle>, IGetIdRepository
     {
         Task Update(int id, string s);
+        Task Update(MusicStyle u);
     }
 }
