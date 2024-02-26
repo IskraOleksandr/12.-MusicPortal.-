@@ -5,7 +5,7 @@ namespace MusicPortal.BLL.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDTO> GetUser(string name);
+        Task<UserDTO> GetUser(string login);
         Task<UserDTO> GetEmail(string email); 
         Task<IEnumerable<UserDTO>> GetAllUsers();
         Task<IEnumerable<UserDTO>> GetUsers(string n);

@@ -38,13 +38,16 @@ namespace MusicPortal.BLL.Services
                 music_style = s.music_style.StyleName,
                 music_styleId = s.music_style.Id,
                 userId = s.UserId,
-                user_name = s.User.Login,
+                User = s.User.Login,
+                Year = s.Year,
             };
         }
         public async Task<IEnumerable<MusicDTO>> GetAllSongs()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Music, MusicDTO>()
-            .ForMember("Singer", opt => opt.MapFrom(c => c.Singer.SingerName)).ForMember("music_style", opt => opt.MapFrom(c => c.music_style.StyleName)));
+            .ForMember("Singer", opt => opt.MapFrom(c => c.Singer.SingerName)).ForMember("music_style", opt => opt.MapFrom(c => c.music_style.StyleName))
+            .ForMember("User", opt => opt.MapFrom(c => c.User.Login))
+            );
             var mapper = new Mapper(config);
             return mapper.Map<IEnumerable<Music>, IEnumerable<MusicDTO>>(await Database.Songs.GetList());
         }
@@ -78,7 +81,8 @@ namespace MusicPortal.BLL.Services
                 music_style = st,
                 MusicStyleId = st.Id,
                 User = us,
-                UserId = us.Id
+                UserId = us.Id,
+                Year = songDto.Year,
             };
             return s;
         }

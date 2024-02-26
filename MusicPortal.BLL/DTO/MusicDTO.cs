@@ -19,7 +19,7 @@ namespace MusicPortal.BLL.DTO
         public string? Album { get; set; }
         public string Video_URL { get; set; }
         public string Year { get; set; }
-        public string? user_name { get; set; }
+        public string? User { get; set; }
         public int? userId { get; set; }
     }
 }

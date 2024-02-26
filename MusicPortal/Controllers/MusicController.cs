@@ -28,8 +28,8 @@ namespace MusicPortal.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<MusicDTO> singers = await Task.Run(() => musicService.GetAllSongs());
-            ViewBag.Musics = singers;//
+            IEnumerable<MusicDTO> singers = await musicService.GetAllSongs();
+            ViewBag.Musics = singers;//Task.Run(()) => 
             return View("Index");
         }
 
@@ -69,7 +69,12 @@ namespace MusicPortal.Controllers
             //var singer = await singerService.GetArtist(music.SingerId);
             musicDTO.singerId = music.SingerId;
 
-            musicDTO.userId = us.Id;
+            musicDTO.Video_Name = music.Video_Name;
+            musicDTO.Year = music.Year;
+            musicDTO.Singer = music.SingerName;
+            musicDTO.User = us.Login;
+
+            musicDTO.Album = music.Album;
             musicDTO.VideoDate = DateTime.Now;
             try
             {
@@ -113,13 +118,13 @@ namespace MusicPortal.Controllers
             {
                 return NotFound();
             }
-
+            AddMusic addMusic = MusicDTO_To_AddMusic(music);
             var styles = await styleService.GetAllStyles();
             var singers = await singerService.GetAllArtists();
 
             ViewBag.Style_List = new SelectList(styles, "Id", "StyleName");
             ViewBag.Singer_List = new SelectList(singers, "Id", "SingerName");
-            return PartialView("Edit", music);
+            return PartialView("Edit", addMusic);
         }
 
 
@@ -187,8 +192,9 @@ namespace MusicPortal.Controllers
             {
                 return NotFound();
             }
+            AddMusic addMusic= MusicDTO_To_AddMusic(music);
 
-            return PartialView(music);
+            return PartialView(addMusic);
         }
 
 
@@ -214,6 +220,18 @@ namespace MusicPortal.Controllers
         {
             IEnumerable<MusicDTO> list = await musicService.GetAllSongs();
             return (list?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private AddMusic MusicDTO_To_AddMusic(MusicDTO music)
+        {
+            AddMusic addMusic = new AddMusic();
+            addMusic.Id = music.Id;
+            addMusic.Video_Name = music.Video_Name;
+            addMusic.Album = music.Album;
+            addMusic.VideoDate = music.VideoDate;
+            addMusic.Year = music.Year;
+            addMusic.UserLogin = music.User;
+            return addMusic;
         }
     }
 }

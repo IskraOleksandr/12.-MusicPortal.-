@@ -17,9 +17,9 @@ namespace MusicPortal.BLL.Services
         {
             Database = uow;
         }
-        public async Task<UserDTO> GetUser(string name)
+        public async Task<UserDTO> GetUser(string login)
         {
-            var u = await Database.Users.GetUser(name);
+            var u = await Database.Users.GetUser(login);
             if (u == null)
                 return null;
             return UserToUserDTO(u);
@@ -29,7 +29,8 @@ namespace MusicPortal.BLL.Services
         {
             try
             {
-                var config = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>());
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()
+                .ForMember("First_Name", opt => opt.MapFrom(c => c.FirstName)).ForMember("Last_Name", opt => opt.MapFrom(c => c.LastName)));
                 var mapper = new Mapper(config);
                 return mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(await Database.Users.GetAll());
             }

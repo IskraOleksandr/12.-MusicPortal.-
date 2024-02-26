@@ -33,7 +33,7 @@ namespace MusicPortal.Models
         public int MusicStyleId { get; set; }
 
         [Display(Name = "Разместил:")]
-        public int UserLogin { get; set; }
+        public string? UserLogin { get; set; }
 
         [Display(Name = "Разместил:")]
         public int UserId { get; set; }
@@ -41,7 +41,7 @@ namespace MusicPortal.Models
         [Required(ErrorMessage = "Поле исполнителя должно быть установлено.")]
         [Display(Name = "Исполнитель:")]
         public int SingerId { get; set; }
-        public int SingerName { get; set; }
+        public string? SingerName { get; set; }
         public int? SongId { get; set; }
     }
 }

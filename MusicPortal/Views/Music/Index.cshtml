@@ -19,10 +19,10 @@
             </div>
             <div class="div_m3">
                 <h2>@item.Video_Name (@item.Year)</h2>
-                <p>Исполнитель: </p>
+                <p>Исполнитель: @item.Singer</p>
                 <p>Альбом: @item.Album</p>
-                <p>Стиль: @* @item.MusicStyle.StyleName *@</p>
-                <p>Разместил: @* @item.User.Login *@</p>
+                <p>Стиль: @item.music_style</p>
+                <p>Разместил: @item.User</p>
                 <p>Дата публикации: @item.VideoDate</p>
                 @if (Context.Session.GetInt32("Level") == 2 && Context.Session.GetString("Login") != null)
                 {

@@ -68,7 +68,7 @@ namespace MusicPortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(Register_Model reg)
+        public async Task<IActionResult> Register(RegisterModel reg)
         {
             if (reg.Login == "admin")
                 ModelState.AddModelError("Login", "admin - запрещенный логин");

@@ -11,9 +11,9 @@ namespace MusicPortal.DAL.Interfaces
     public interface IUserRepository : ISetGetRepository<User>
     {
         Task<IEnumerable<User>> GetAll();
-        Task<User> GetUser(string name);
+        Task<User> GetUser(string login);
         Task<User> GetEmail(string email);
-        Task<List<User>> GetUsers(string n);
+        Task<List<User>> GetUsers(string l);
         Task Update(int id, int l);
         Task Update(User u);
         Task Delete(int id);

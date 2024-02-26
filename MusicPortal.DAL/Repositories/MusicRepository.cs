@@ -22,11 +22,11 @@ namespace MusicPortal.DAL.Repositories
         }
         public async Task<Music> Get(int id)
         {
-            return await db.Musics.Include((p) => p.Singer).Include((p) => p.music_style).FirstOrDefaultAsync(m => m.Id == id);
+            return await db.Musics.Include((p) => p.Singer).Include((p)=> p.User).Include((p) => p.music_style).FirstOrDefaultAsync(m => m.Id == id);
         }
         public async Task<List<Music>> GetList()
         {
-            return await db.Musics.Include((p) => p.Singer).Include((p) => p.music_style).ToListAsync();
+            return await db.Musics.Include((p) => p.Singer).Include((p) => p.User).Include((p) => p.music_style).ToListAsync();
         }
         public async Task<List<Music>> FindSongs(string str)
         {

@@ -22,9 +22,9 @@ namespace MusicPortal.DAL.Repositories
         {
             return await db.Users.ToListAsync();
         }
-        public async Task<User> GetUser(string name)
+        public async Task<User> GetUser(string login)
         {
-            return await db.Users.FirstOrDefaultAsync(m => m.FirstName == name);
+            return await db.Users.FirstOrDefaultAsync(m => m.Login == login);
         }
         public async Task<User> GetEmail(string email)
         {
@@ -32,7 +32,7 @@ namespace MusicPortal.DAL.Repositories
         }
         public async Task<List<User>> GetUsers(string n)
         {
-            return await db.Users.Where(user => user.FirstName != n).ToListAsync();
+            return await db.Users.Where(user => user.Login != n).ToListAsync();
         }
         public async Task AddItem(User user)
         {
